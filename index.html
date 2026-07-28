@@ -1,0 +1,1092 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Palacio Mental — Entrenamiento de Memoria</title>
+<link rel="manifest" href="./manifest.json">
+<meta name="theme-color" content="#14111f">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="Palacio Mental">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Manrope:wght@400;500;600;700;800&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#14111f;
+  --bg-elevated:#1e1a2f;
+  --bg-elevated-2:#262038;
+  --border:#372f52;
+  --text:#f3efe4;
+  --text-dim:#b0a8c9;
+  --accent:#e8b355;
+  --accent-2:#5fc9b8;
+  --error:#e8607a;
+  --radius:14px;
+  --radius-sm:8px;
+  --font-display:'Fraunces', Georgia, serif;
+  --font-body:'Manrope', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+  --font-mono:'Space Mono', 'Courier New', monospace;
+}
+*{box-sizing:border-box;}
+html{scroll-behavior:smooth;}
+body{
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:var(--font-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+img,svg{max-width:100%;}
+h1,h2,h3,h4{font-family:var(--font-display);font-weight:600;margin:0 0 .5em;color:var(--text);}
+p{margin:0 0 1em;color:var(--text-dim);}
+a{color:var(--accent);}
+button{font-family:inherit;}
+ul{color:var(--text-dim);}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;}
+
+.app-header{padding:28px 20px 16px;text-align:center;border-bottom:1px solid var(--border);}
+.app-header h1{font-size:1.8rem;letter-spacing:.01em;margin-bottom:.25em;}
+.app-header .tagline{color:var(--text-dim);font-size:.95rem;max-width:520px;margin:0 auto;}
+
+.app-nav{
+  display:flex;overflow-x:auto;gap:6px;padding:10px 14px;
+  background:var(--bg-elevated);border-bottom:1px solid var(--border);
+  position:sticky;top:0;z-index:20;scrollbar-width:none;
+}
+.app-nav::-webkit-scrollbar{display:none;}
+.nav-btn{
+  flex:0 0 auto;display:flex;flex-direction:column;align-items:center;gap:2px;
+  min-width:64px;min-height:44px;padding:8px 10px;background:transparent;
+  border:1px solid transparent;border-radius:var(--radius-sm);color:var(--text-dim);
+  font-size:.72rem;font-weight:700;cursor:pointer;transition:background .15s,color .15s,border-color .15s;
+}
+.nav-btn .nav-icon{font-size:1.15rem;}
+.nav-btn.active{color:var(--accent);background:var(--bg-elevated-2);border-color:var(--border);}
+
+.app-main{max-width:720px;margin:0 auto;padding:20px 16px 60px;}
+.tab-panel{display:none;}
+.tab-panel.active{display:block;animation:fadeIn .25s ease;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(6px);}to{opacity:1;transform:translateY(0);}}
+
+.card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:18px;margin-bottom:16px;}
+.section-title{font-size:1.3rem;margin-bottom:10px;}
+.section-lead{color:var(--text-dim);margin-bottom:18px;}
+
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:6px;min-height:44px;
+  padding:10px 18px;border-radius:999px;border:1px solid var(--border);background:var(--bg-elevated-2);
+  color:var(--text);font-weight:700;font-size:.95rem;cursor:pointer;transition:transform .1s, border-color .15s;
+}
+.btn:active{transform:scale(.97);}
+.btn-primary{background:var(--accent);color:#231a05;border-color:var(--accent);}
+.btn-secondary{background:transparent;border-color:var(--border);}
+.btn-row{display:flex;gap:10px;flex-wrap:wrap;margin-top:10px;}
+
+.hero-svg{width:100%;max-width:420px;display:block;margin:6px auto 18px;}
+.hero-svg .hero-path{stroke:var(--border);stroke-width:2;stroke-dasharray:6 6;}
+.hero-room rect{fill:var(--bg-elevated-2);stroke:var(--accent);stroke-width:1.5;}
+.hero-room .hero-locus{fill:var(--accent);}
+@media (prefers-reduced-motion:no-preference){
+  .hero-room .hero-locus{animation:pulseOpacity 2.4s ease-in-out infinite;}
+  .hero-room:nth-of-type(2) .hero-locus{animation-delay:.3s;}
+  .hero-room:nth-of-type(3) .hero-locus{animation-delay:.6s;}
+  .hero-room:nth-of-type(4) .hero-locus{animation-delay:.9s;}
+}
+@keyframes pulseOpacity{0%,100%{opacity:1;}50%{opacity:.35;}}
+
+.myth-list{list-style:none;padding:0;margin:0;}
+.myth-list li{padding:10px 0 10px 26px;position:relative;color:var(--text);border-bottom:1px solid var(--border);}
+.myth-list li:last-child{border-bottom:none;}
+.myth-list li::before{content:'✦';position:absolute;left:0;top:10px;color:var(--accent);}
+
+.nav-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+.nav-card{background:var(--bg-elevated-2);border:1px solid var(--border);border-radius:var(--radius);padding:14px;text-align:left;cursor:pointer;color:var(--text);min-height:44px;}
+.nav-card .nav-card-icon{font-size:1.4rem;display:block;margin-bottom:6px;}
+.nav-card .nav-card-title{font-weight:700;display:block;margin-bottom:2px;font-family:var(--font-display);}
+.nav-card .nav-card-desc{font-size:.8rem;color:var(--text-dim);}
+
+.theory-item{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:12px;overflow:hidden;}
+.theory-item summary{padding:16px 18px;cursor:pointer;font-family:var(--font-display);font-weight:600;font-size:1.05rem;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px;}
+.theory-item summary::-webkit-details-marker{display:none;}
+.theory-item summary::after{content:'+';font-size:1.4rem;color:var(--accent);flex-shrink:0;}
+.theory-item[open] summary::after{content:'–';}
+.theory-body{padding:0 18px 18px;}
+.tips-box{background:var(--bg-elevated-2);border-left:3px solid var(--accent);border-radius:0 var(--radius-sm) var(--radius-sm) 0;padding:12px 14px;margin-top:12px;font-size:.9rem;}
+.tips-box strong{color:var(--accent);}
+.tips-box ul{margin:6px 0 0;padding-left:20px;}
+.tips-box li{margin-bottom:4px;color:var(--text-dim);}
+
+.item-bank{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px;}
+.item-chip{min-height:44px;padding:9px 14px;border-radius:999px;border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text);font-size:.88rem;cursor:pointer;}
+.item-chip.selected{border-color:var(--accent);background:rgba(232,179,85,.18);color:var(--accent);}
+.item-chip.placed{opacity:.4;}
+.item-chip.static{cursor:default;font-family:var(--font-mono);font-size:.8rem;}
+.item-chip .chip-check{color:var(--accent-2);}
+
+.palace-rooms{display:flex;flex-direction:column;gap:8px;margin-bottom:16px;}
+.room-slot{display:flex;justify-content:space-between;align-items:center;gap:10px;min-height:52px;padding:12px 14px;border-radius:var(--radius-sm);border:1px dashed var(--border);background:var(--bg-elevated-2);color:var(--text-dim);text-align:left;cursor:pointer;width:100%;}
+.room-slot.filled{border-style:solid;border-color:var(--accent-2);color:var(--text);}
+.room-slot .room-name{font-weight:700;font-size:.82rem;color:var(--accent);flex-shrink:0;}
+.room-slot .room-content{font-size:.9rem;text-align:right;}
+
+.test-area{display:none;}
+.test-area.active{display:block;}
+.test-room-row{margin-bottom:10px;}
+.test-room-label{display:block;font-weight:700;margin-bottom:4px;font-size:.88rem;color:var(--text);}
+.test-room-input{width:100%;min-height:44px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text);font-size:1rem;}
+.test-result-row{padding:8px 10px;border-radius:var(--radius-sm);margin-bottom:6px;font-size:.88rem;}
+.test-result-row.correct{background:rgba(95,201,184,.15);color:var(--accent-2);}
+.test-result-row.incorrect{background:rgba(232,96,122,.15);color:var(--error);}
+.score-banner{font-family:var(--font-display);font-size:1.2rem;margin-bottom:10px;color:var(--accent);}
+
+textarea, input[type=text]{width:100%;min-height:44px;padding:10px 12px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text);font-family:inherit;font-size:1rem;}
+textarea{min-height:80px;resize:vertical;}
+label{font-size:.85rem;color:var(--text-dim);display:block;margin-bottom:6px;}
+
+.major-code-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:18px;}
+.code-card{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius-sm);padding:10px 12px;}
+.code-card summary{cursor:pointer;display:flex;align-items:center;gap:10px;list-style:none;}
+.code-card summary::-webkit-details-marker{display:none;}
+.code-digit{font-family:var(--font-mono);font-size:1.4rem;color:var(--accent);font-weight:700;}
+.code-sounds{font-size:.8rem;color:var(--text-dim);}
+.code-mnemonic{font-size:.85rem;margin:8px 0 0;color:var(--text);}
+
+.quiz-state{display:none;}
+.quiz-state.active{display:block;}
+.quiz-progress{font-size:.85rem;color:var(--text-dim);margin-bottom:10px;}
+.quiz-prompt{font-family:var(--font-display);font-size:1.25rem;margin-bottom:16px;color:var(--text);}
+.quiz-options{display:flex;flex-direction:column;gap:10px;}
+.option-btn{min-height:48px;padding:12px 16px;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text);font-size:1rem;font-family:var(--font-mono);cursor:pointer;text-align:left;}
+.option-btn.correct{border-color:var(--accent-2);background:rgba(95,201,184,.18);color:var(--accent-2);}
+.option-btn.incorrect{border-color:var(--error);background:rgba(232,96,122,.18);color:var(--error);}
+.quiz-feedback{margin-top:12px;font-weight:700;min-height:1.2em;}
+.correct-text{color:var(--accent-2);}
+.incorrect-text{color:var(--error);}
+
+.mem-toolbar{display:flex;justify-content:space-between;margin-bottom:12px;font-size:.85rem;color:var(--text-dim);}
+.mem-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;}
+.mem-card{aspect-ratio:1;border-radius:var(--radius-sm);border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text-dim);cursor:pointer;display:flex;align-items:center;justify-content:center;text-align:center;font-size:.74rem;padding:5px;line-height:1.15;}
+.mem-card.flipped{background:var(--bg-elevated);color:var(--text);border-color:var(--accent);font-weight:600;}
+.mem-card.matched{background:rgba(95,201,184,.15);border-color:var(--accent-2);color:var(--accent-2);}
+
+.recall-state{display:none;}
+.recall-state.active{display:block;}
+.level-buttons{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;}
+.level-btn{min-height:44px;padding:10px 16px;border-radius:999px;border:1px solid var(--border);background:var(--bg-elevated-2);color:var(--text);cursor:pointer;font-weight:700;}
+.recall-timer-display{font-family:var(--font-mono);font-size:2.4rem;text-align:center;color:var(--accent);margin:10px 0;}
+.recall-study-list{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-bottom:16px;}
+.word-chip{padding:8px 14px;border-radius:999px;background:var(--bg-elevated-2);border:1px solid var(--border);font-size:.92rem;}
+.word-chip.correct{border-color:var(--accent-2);color:var(--accent-2);}
+.word-chip.incorrect{border-color:var(--error);color:var(--error);}
+.history-row{display:flex;justify-content:space-between;padding:8px 0;border-bottom:1px solid var(--border);font-size:.88rem;color:var(--text-dim);}
+.history-row:last-child{border-bottom:none;}
+
+.plan-week{background:var(--bg-elevated);border:1px solid var(--border);border-radius:var(--radius);padding:16px;margin-bottom:12px;}
+.plan-week-header{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-bottom:8px;flex-wrap:wrap;}
+.plan-week ul{margin:0;padding-left:20px;font-size:.9rem;}
+.plan-week li{margin-bottom:4px;}
+.week-check-label{display:flex;align-items:center;gap:6px;font-size:.85rem;white-space:nowrap;color:var(--text-dim);}
+.week-check-label input{width:18px;height:18px;}
+
+.hint{font-size:.85rem;color:var(--text-dim);}
+.app-footer{text-align:center;padding:24px 20px 40px;color:var(--text-dim);font-size:.8rem;border-top:1px solid var(--border);}
+
+@media (min-width:768px){
+  .app-main{padding-top:32px;}
+  .major-code-grid{grid-template-columns:1fr 1fr 1fr;}
+  .nav-cards{grid-template-columns:1fr 1fr 1fr;}
+  .palace-rooms{display:grid;grid-template-columns:1fr 1fr;gap:10px;}
+}
+</style>
+</head>
+<body>
+
+<header class="app-header">
+  <h1>🏛️ Palacio Mental</h1>
+  <p class="tagline">Entrenamiento de memoria con base en neurociencia — sin promesas mágicas, con técnicas que sí funcionan.</p>
+</header>
+
+<nav class="app-nav">
+  <button type="button" class="nav-btn active" data-tab="inicio" onclick="showTab('inicio')"><span class="nav-icon">🏠</span>Inicio</button>
+  <button type="button" class="nav-btn" data-tab="teoria" onclick="showTab('teoria')"><span class="nav-icon">📖</span>Teoría</button>
+  <button type="button" class="nav-btn" data-tab="palacio" onclick="showTab('palacio')"><span class="nav-icon">🏛️</span>Palacio</button>
+  <button type="button" class="nav-btn" data-tab="numeros" onclick="showTab('numeros')"><span class="nav-icon">🔢</span>Números</button>
+  <button type="button" class="nav-btn" data-tab="memorama" onclick="showTab('memorama')"><span class="nav-icon">🧩</span>Memorama</button>
+  <button type="button" class="nav-btn" data-tab="recall" onclick="showTab('recall')"><span class="nav-icon">⏱️</span>Recall</button>
+  <button type="button" class="nav-btn" data-tab="plan" onclick="showTab('plan')"><span class="nav-icon">📅</span>Plan</button>
+</nav>
+
+<main class="app-main">
+
+  <section id="tab-inicio" class="tab-panel active">
+    <svg class="hero-svg" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Ilustración de un recorrido de palacio de la memoria con varias habitaciones conectadas">
+      <line x1="50" y1="100" x2="350" y2="100" class="hero-path"></line>
+      <g class="hero-room" transform="translate(20,60)"><rect width="60" height="80" rx="4"></rect><circle cx="30" cy="40" r="5" class="hero-locus"></circle></g>
+      <g class="hero-room" transform="translate(120,50)"><rect width="60" height="100" rx="4"></rect><circle cx="30" cy="50" r="5" class="hero-locus"></circle></g>
+      <g class="hero-room" transform="translate(220,65)"><rect width="60" height="70" rx="4"></rect><circle cx="30" cy="35" r="5" class="hero-locus"></circle></g>
+      <g class="hero-room" transform="translate(320,55)"><rect width="60" height="90" rx="4"></rect><circle cx="30" cy="45" r="5" class="hero-locus"></circle></g>
+    </svg>
+
+    <div class="card">
+      <h2 class="section-title">¿Existe de verdad la memoria fotográfica?</h2>
+      <p>La ciencia cognitiva es bastante clara: recordar una página entera como si fuera una foto <strong>no está respaldado por evidencia en adultos</strong>. Lo que sí es real y entrenable es la <em>memoria experta</em>: con las técnicas correctas, personas con memoria normal han duplicado o triplicado lo que pueden recordar en pocas semanas.</p>
+      <ul class="myth-list">
+        <li>40 días de entrenamiento (30 min/día) con el Palacio de la Memoria hicieron que un grupo de novatos pasara de recordar 26 a 62 de 72 palabras — y la mejora se mantuvo 4 meses después.</li>
+        <li>Un caso clásico: una persona pasó de recordar 7 dígitos a 79 dígitos tras más de 230 horas de práctica con una técnica mnemónica.</li>
+        <li>Los campeones mundiales de memoria no tienen un cerebro distinto al tuyo — casi todos usan la misma técnica base: el método de loci.</li>
+        <li>La parte importante: estas ganancias son específicas al tipo de material que entrenas, no te vuelven "más inteligente" en general.</li>
+      </ul>
+    </div>
+
+    <div class="card">
+      <h2 class="section-title">Cómo usar esta herramienta</h2>
+      <p class="section-lead">Cada sección entrena una técnica distinta. No necesitas seguir un orden, pero si vas empezando, este es un buen camino:</p>
+      <div class="nav-cards">
+        <button type="button" class="nav-card" onclick="showTab('teoria')"><span class="nav-card-icon">📖</span><span class="nav-card-title">Teoría</span><span class="nav-card-desc">Cómo funciona cada técnica y por qué</span></button>
+        <button type="button" class="nav-card" onclick="showTab('palacio')"><span class="nav-card-icon">🏛️</span><span class="nav-card-title">Palacio</span><span class="nav-card-desc">Construye tu palacio de la memoria</span></button>
+        <button type="button" class="nav-card" onclick="showTab('numeros')"><span class="nav-card-icon">🔢</span><span class="nav-card-title">Números</span><span class="nav-card-desc">Sistema Mayor: dígitos a palabras</span></button>
+        <button type="button" class="nav-card" onclick="showTab('memorama')"><span class="nav-card-icon">🧩</span><span class="nav-card-title">Memorama</span><span class="nav-card-desc">Empareja técnica con definición</span></button>
+        <button type="button" class="nav-card" onclick="showTab('recall')"><span class="nav-card-icon">⏱️</span><span class="nav-card-title">Recall rápido</span><span class="nav-card-desc">El ejercicio con más evidencia</span></button>
+        <button type="button" class="nav-card" onclick="showTab('plan')"><span class="nav-card-icon">📅</span><span class="nav-card-title">Plan de 8 semanas</span><span class="nav-card-desc">Progresión con seguimiento</span></button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-teoria" class="tab-panel">
+    <h2 class="section-title">Las técnicas que sí funcionan</h2>
+    <p class="section-lead">Cada una ataca la memoria de una forma distinta. Toca cada tarjeta para abrirla.</p>
+
+    <details class="theory-item" open>
+      <summary>🏛️ Método de Loci (Palacio de la Memoria)</summary>
+      <div class="theory-body">
+        <p>Consiste en ubicar imágenes mentales en lugares fijos de un recorrido que conoces de memoria (tu casa, tu ruta a la escuela). Tu cerebro es excelente recordando espacios — esta técnica aprovecha ese sistema para recordar cualquier otra cosa.</p>
+        <div class="tips-box">
+          <strong>🧠 Tips para que se te quede más rápido:</strong>
+          <ul>
+            <li><strong>Analogía:</strong> es como recorrer tu casa a oscuras — sabes exactamente qué hay en cada cuarto sin pensarlo dos veces.</li>
+            <li><strong>Regla de oro:</strong> usa siempre el mismo recorrido, en el mismo orden. No lo cambies entre sesiones.</li>
+            <li><strong>Error común:</strong> usar imágenes "aburridas". Mientras más rara, exagerada o absurda sea la imagen, más se pega.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="theory-item">
+      <summary>🔢 Sistema Mayor</summary>
+      <div class="theory-body">
+        <p>Convierte cada dígito (0-9) en un sonido consonante fijo. Al unir varios sonidos con vocales libres, puedes formar palabras — y las palabras son mucho más fáciles de recordar que números sueltos.</p>
+        <div class="tips-box">
+          <strong>🧠 Tips para que se te quede más rápido:</strong>
+          <ul>
+            <li><strong>Prioridad:</strong> memoriza primero los 10 sonidos hasta que sean automáticos. No intentes memorizar 100 palabras de un jalón.</li>
+            <li><strong>Error común:</strong> confundir sonido con letra escrita — las vocales y la H no cuentan, solo importa cómo suena.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="theory-item">
+      <summary>🎭 Sistema PAO (Persona-Acción-Objeto)</summary>
+      <div class="theory-body">
+        <p>Cada número o carta se convierte en una Persona haciendo una Acción con un Objeto. Al combinar tres elementos en una sola escena, memorizas mucha más información con menos "lugares" en tu palacio.</p>
+        <div class="tips-box">
+          <strong>🧠 Tips para que se te quede más rápido:</strong>
+          <ul>
+            <li><strong>Analogía:</strong> reutiliza personas que ya conoces bien (celebridades, amigos) — entre más familiar, más rápido llega la imagen.</li>
+            <li><strong>Error común:</strong> escenas sin acción específica se vuelven genéricas y no se pegan tan bien.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="theory-item">
+      <summary>🔁 Recuperación activa</summary>
+      <div class="theory-body">
+        <p>En vez de releer tus apuntes, cierras el material e intentas recordarlo desde cero. Esta "dificultad deseable" reconstruye el recuerdo y lo fortalece mucho más que simplemente volver a leer — aunque se sienta más incómodo.</p>
+        <div class="tips-box">
+          <strong>🧠 Tips para que se te quede más rápido:</strong>
+          <ul>
+            <li><strong>Señal de alerta:</strong> si releer se siente fácil, es mala señal — la dificultad de recordar ES el ejercicio.</li>
+            <li><strong>Prioriza:</strong> preguntas abiertas o de completar antes que opción múltiple — generar la respuesta se queda más que reconocerla.</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+
+    <details class="theory-item">
+      <summary>📆 Repetición espaciada</summary>
+      <div class="theory-body">
+        <p>Sin repaso, olvidas cerca del 70% de algo nuevo en 24 horas (la curva de Ebbinghaus). Repasar justo antes de que se te olvide "resetea" esa curva. Por eso herramientas como Anki muestran cada tarjeta en intervalos crecientes: 1 día, 3 días, 1 semana, 1 mes...</p>
+        <div class="tips-box">
+          <strong>🧠 Tips para que se te quede más rápido:</strong>
+          <ul>
+            <li><strong>Cuándo repasar:</strong> justo cuando sientas que empieza a costarte recordarlo, no antes ni mucho después.</li>
+            <li><strong>Conexión:</strong> combínalo con recuperación activa — el repaso debe ser "intenta recordar", no "vuelve a leer".</li>
+          </ul>
+        </div>
+      </div>
+    </details>
+  </section>
+
+  <section id="tab-palacio" class="tab-panel">
+    <h2 class="section-title">🏛️ Construye tu palacio</h2>
+    <p class="section-lead">Toca un elemento de la lista y luego toca la habitación donde quieres colocarlo. Mientras lo colocas, imagina una escena vívida y absurda con ese objeto en ese lugar — entre más rara, mejor.</p>
+
+    <div class="card">
+      <label for="palace-custom-input">Tu propia lista (opcional) — sepárala por comas o renglones, hasta 10 elementos</label>
+      <textarea id="palace-custom-input" placeholder="Ej: ley de Ohm, teorema de Bayes, protocolo TCP..."></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="applyCustomPalaceList()">Usar mi lista</button>
+        <button type="button" class="btn btn-secondary" onclick="resetPalace()">Reiniciar palacio</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Elementos por colocar</h3>
+      <div class="item-bank" id="palace-items"></div>
+      <h3>Tu recorrido</h3>
+      <div class="palace-rooms" id="palace-rooms"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" onclick="startPalaceTest()">Ponerme a prueba</button>
+      </div>
+    </div>
+
+    <div class="card test-area" id="palace-test-area"></div>
+  </section>
+
+  <section id="tab-numeros" class="tab-panel">
+    <h2 class="section-title">🔢 Sistema Mayor</h2>
+    <p class="section-lead">Cada dígito tiene un sonido fijo. Toca cada tarjeta para ver el truco para recordarlo.</p>
+    <div class="major-code-grid" id="major-code-grid"></div>
+
+    <div class="card">
+      <h3>Practica</h3>
+      <p class="hint" id="major-best-score">Cargando…</p>
+
+      <div id="major-quiz-intro" class="quiz-state active">
+        <p>10 preguntas, ida y vuelta entre número y palabra, usando el banco de ejemplo de abajo.</p>
+        <button type="button" class="btn btn-primary" onclick="startMajorQuiz()">Iniciar quiz</button>
+      </div>
+
+      <div id="major-quiz-play" class="quiz-state">
+        <p class="quiz-progress" id="major-quiz-progress"></p>
+        <p class="quiz-prompt" id="major-quiz-prompt"></p>
+        <div class="quiz-options" id="major-quiz-options"></div>
+        <p class="quiz-feedback" id="major-quiz-feedback"></p>
+      </div>
+
+      <div id="major-quiz-end" class="quiz-state">
+        <p class="score-banner">Puntaje final: <span id="major-quiz-final-score"></span></p>
+        <div class="btn-row">
+          <button type="button" class="btn btn-primary" onclick="startMajorQuiz()">Reintentar</button>
+          <button type="button" class="btn btn-secondary" onclick="resetMajorQuizView()">Volver</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Banco de palabras de ejemplo</h3>
+      <p class="hint">Estas son solo para empezar — con el tiempo arma tu propia lista de 00 a 99.</p>
+      <div class="item-bank" id="major-words-reference"></div>
+    </div>
+  </section>
+
+  <section id="tab-memorama" class="tab-panel">
+    <h2 class="section-title">🧩 Memorama de técnicas</h2>
+    <p class="section-lead">Empareja cada técnica con su definición. Pon a prueba qué tanto entendiste.</p>
+    <div class="card">
+      <div class="mem-toolbar">
+        <span id="mem-moves">Movimientos: 0</span>
+        <span id="mem-timer">Tiempo: 0s</span>
+      </div>
+      <div class="mem-grid" id="mem-grid"></div>
+      <p class="hint" id="mem-status"></p>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="initMemorama()">Reiniciar</button>
+      </div>
+    </div>
+  </section>
+
+  <section id="tab-recall" class="tab-panel">
+    <h2 class="section-title">⏱️ Recall rápido</h2>
+    <p class="section-lead">Este es el ejercicio con más evidencia científica de todos: memorizas una lista por poco tiempo y luego intentas recordarla completa. Así se entrena la recuperación activa.</p>
+
+    <div class="card recall-state active" id="recall-setup">
+      <h3>Elige una lista</h3>
+      <div class="level-buttons">
+        <button type="button" class="level-btn" onclick="startRecall('easy')">Fácil · 10 palabras</button>
+        <button type="button" class="level-btn" onclick="startRecall('medium')">Medio · 15 palabras</button>
+        <button type="button" class="level-btn" onclick="startRecall('hard')">Difícil · 20 palabras</button>
+      </div>
+      <label for="recall-custom-input">O escribe tu propia lista (útil para vocabulario, fórmulas, fechas)</label>
+      <textarea id="recall-custom-input" placeholder="Separa por comas o renglones"></textarea>
+      <button type="button" class="btn btn-primary" onclick="startRecall('custom')">Usar mi lista</button>
+    </div>
+
+    <div class="card recall-state" id="recall-study">
+      <h3>Memorízalas</h3>
+      <div class="recall-timer-display" id="recall-timer"></div>
+      <div class="recall-study-list" id="recall-study-list"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-secondary" onclick="skipToRecallInput()">Ya me las sé, continuar</button>
+      </div>
+    </div>
+
+    <div class="card recall-state" id="recall-input-phase">
+      <h3>Escribe todo lo que recuerdes</h3>
+      <textarea id="recall-answer" placeholder="Separa por comas o renglones"></textarea>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" onclick="submitRecall()">Revisar</button>
+      </div>
+    </div>
+
+    <div class="card recall-state" id="recall-results">
+      <h3>Resultado</h3>
+      <p class="score-banner" id="recall-score"></p>
+      <div class="recall-study-list" id="recall-results-list"></div>
+      <div class="btn-row">
+        <button type="button" class="btn btn-primary" onclick="resetRecallToSetup()">Otra ronda</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3>Tu historial</h3>
+      <div id="recall-history-list"></div>
+    </div>
+  </section>
+
+  <section id="tab-plan" class="tab-panel">
+    <h2 class="section-title">📅 Plan de 8 semanas</h2>
+    <p class="section-lead">Progresión sugerida de cero a memoria entrenada. Marca cada semana conforme avances — tu progreso se guarda automáticamente.</p>
+    <div id="plan-weeks"></div>
+
+    <div class="card">
+      <h3>Reglas generales</h3>
+      <ul class="myth-list">
+        <li>20-30 minutos diarios rinden más que 3 horas el fin de semana — la constancia importa más que la duración.</li>
+        <li>La noche antes de un examen: solo repaso rápido con flashcards, nada nuevo. La consolidación pasa mientras duermes.</li>
+        <li>Si en 4 semanas no ves mejora, revisa si tus imágenes son suficientemente vívidas o absurdas — esa suele ser la causa.</li>
+      </ul>
+    </div>
+  </section>
+
+</main>
+
+<footer class="app-footer">
+  <p>Basado en investigación de neurociencia cognitiva (Ericsson, Maguire, Dresler, Dunlosky y otros). La "memoria fotográfica" tal cual se imagina no existe — esto sí.</p>
+</footer>
+
+<script>
+/* ---------- Almacenamiento local (reemplaza window.storage de Claude artifacts) ---------- */
+/* Fuera de Claude.ai, window.storage no existe — esta capa usa localStorage del navegador
+   con la misma interfaz (get/set/delete/list, async, {key,value,shared}) para que el resto
+   del código no tenga que cambiar. */
+(function(){
+  var PREFIX = 'palacioMental:';
+  function safe(fn, fallback){
+    try{ return fn(); } catch(e){ return fallback; }
+  }
+  window.storage = {
+    get: function(key){
+      return Promise.resolve(safe(function(){
+        var raw = localStorage.getItem(PREFIX + key);
+        if(raw === null) return null;
+        return {key:key, value:raw, shared:false};
+      }, null));
+    },
+    set: function(key, value){
+      return Promise.resolve(safe(function(){
+        localStorage.setItem(PREFIX + key, value);
+        return {key:key, value:value, shared:false};
+      }, null));
+    },
+    delete: function(key){
+      return Promise.resolve(safe(function(){
+        localStorage.removeItem(PREFIX + key);
+        return {key:key, deleted:true, shared:false};
+      }, null));
+    },
+    list: function(prefix){
+      return Promise.resolve(safe(function(){
+        var keys = [];
+        var full = PREFIX + (prefix || '');
+        for(var i=0;i<localStorage.length;i++){
+          var k = localStorage.key(i);
+          if(k.indexOf(full) === 0) keys.push(k.slice(PREFIX.length));
+        }
+        return {keys:keys, prefix:prefix, shared:false};
+      }, null));
+    }
+  };
+})();
+
+function escapeHtml(str){
+  var div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+function normalize(str){
+  return String(str||'')
+    .trim()
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/[^a-z0-9\s]/g, '');
+}
+function shuffleArray(arr){
+  var a = arr.slice();
+  for(var i=a.length-1;i>0;i--){
+    var j = Math.floor(Math.random()*(i+1));
+    var tmp=a[i]; a[i]=a[j]; a[j]=tmp;
+  }
+  return a;
+}
+
+function showTab(name){
+  document.querySelectorAll('.tab-panel').forEach(function(el){ el.classList.remove('active'); });
+  document.querySelectorAll('.nav-btn').forEach(function(el){ el.classList.remove('active'); });
+  var panel = document.getElementById('tab-'+name);
+  if(panel) panel.classList.add('active');
+  var btn = document.querySelector('.nav-btn[data-tab="'+name+'"]');
+  if(btn) btn.classList.add('active');
+  window.scrollTo({top:0, behavior:'smooth'});
+  if(name==='recall') renderRecallHistory();
+  if(name==='plan') renderPlanWeeks();
+}
+
+/* ---------- Palacio ---------- */
+var palaceRoomNames = ['Entrada','Recibidor','Sala','Comedor','Cocina','Pasillo','Recámara','Baño','Estudio','Jardín'];
+var palaceItems = ['plátano','paraguas','cepillo de dientes','dado','columpio','tetera','llave inglesa','campana','sandalia','papalote'];
+var palaceAssignment = {};
+var palaceSelectedItem = null;
+
+function activePalaceRoomCount(){
+  return Math.min(Math.max(palaceItems.length, 1), palaceRoomNames.length);
+}
+function renderPalace(){
+  renderPalaceItemBank();
+  renderPalaceRoomsList();
+}
+function renderPalaceItemBank(){
+  var container = document.getElementById('palace-items');
+  if(!container) return;
+  var placedIndexes = Object.keys(palaceAssignment).map(function(k){ return palaceAssignment[k]; });
+  container.innerHTML = palaceItems.map(function(item, idx){
+    var isPlaced = placedIndexes.indexOf(idx) !== -1;
+    var isSelected = palaceSelectedItem === idx;
+    var cls = 'item-chip' + (isPlaced ? ' placed' : '') + (isSelected ? ' selected' : '');
+    return '<button type="button" class="'+cls+'" onclick="selectPalaceItem('+idx+')">'+escapeHtml(item)+(isPlaced?' <span class="chip-check">✓</span>':'')+'</button>';
+  }).join('');
+}
+function renderPalaceRoomsList(){
+  var container = document.getElementById('palace-rooms');
+  if(!container) return;
+  var count = activePalaceRoomCount();
+  var rooms = palaceRoomNames.slice(0, count);
+  container.innerHTML = rooms.map(function(room, idx){
+    var itemIdx = palaceAssignment[idx];
+    var filled = (itemIdx !== undefined);
+    var content = filled ? escapeHtml(palaceItems[itemIdx]) : 'Toca para colocar aquí';
+    var cls = 'room-slot' + (filled ? ' filled' : '');
+    return '<button type="button" class="'+cls+'" onclick="placePalaceItemInRoom('+idx+')">' +
+             '<span class="room-name">'+(idx+1)+'. '+escapeHtml(room)+'</span>' +
+             '<span class="room-content">'+content+'</span>' +
+           '</button>';
+  }).join('');
+}
+function selectPalaceItem(idx){
+  var placedIndexes = Object.keys(palaceAssignment).map(function(k){ return palaceAssignment[k]; });
+  if(placedIndexes.indexOf(idx) !== -1){
+    Object.keys(palaceAssignment).forEach(function(r){
+      if(palaceAssignment[r] === idx) delete palaceAssignment[r];
+    });
+    palaceSelectedItem = idx;
+  } else {
+    palaceSelectedItem = (palaceSelectedItem === idx) ? null : idx;
+  }
+  renderPalace();
+}
+function placePalaceItemInRoom(roomIdx){
+  if(palaceSelectedItem === null) return;
+  palaceAssignment[roomIdx] = palaceSelectedItem;
+  palaceSelectedItem = null;
+  renderPalace();
+}
+function resetPalace(){
+  palaceAssignment = {};
+  palaceSelectedItem = null;
+  var testArea = document.getElementById('palace-test-area');
+  if(testArea){ testArea.innerHTML=''; testArea.classList.remove('active'); }
+  renderPalace();
+}
+function applyCustomPalaceList(){
+  var input = document.getElementById('palace-custom-input');
+  if(!input) return;
+  var items = input.value.split(/[\n,]/).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+  if(items.length === 0) return;
+  palaceItems = items.slice(0, 10);
+  palaceAssignment = {};
+  palaceSelectedItem = null;
+  renderPalace();
+}
+function startPalaceTest(){
+  var area = document.getElementById('palace-test-area');
+  var assignedRoomKeys = Object.keys(palaceAssignment);
+  if(assignedRoomKeys.length === 0){
+    alert('Coloca al menos un elemento en una habitación antes de comenzar la prueba.');
+    return;
+  }
+  var roomsHtml = assignedRoomKeys.map(function(roomIdxStr){
+    var roomIdx = parseInt(roomIdxStr, 10);
+    return '<div class="test-room-row">' +
+      '<label class="test-room-label">'+(roomIdx+1)+'. '+escapeHtml(palaceRoomNames[roomIdx])+'</label>' +
+      '<input type="text" class="test-room-input" data-room="'+roomIdx+'" placeholder="¿Qué colocaste aquí?">' +
+    '</div>';
+  }).join('');
+  area.innerHTML = '<h3>Recorre tu palacio</h3><p class="hint">Cierra los ojos, camina mentalmente por el recorrido y escribe qué objeto dejaste en cada lugar.</p>' +
+    roomsHtml +
+    '<div class="btn-row"><button type="button" class="btn btn-primary" onclick="checkPalaceTest()">Revisar</button></div>' +
+    '<div id="palace-test-results"></div>';
+  area.classList.add('active');
+}
+function checkPalaceTest(){
+  var inputs = document.querySelectorAll('.test-room-input');
+  var correct = 0;
+  var total = inputs.length;
+  var resultsHtml = '';
+  inputs.forEach(function(inp){
+    var roomIdx = parseInt(inp.dataset.room, 10);
+    var correctItem = palaceItems[palaceAssignment[roomIdx]];
+    var given = inp.value;
+    var isCorrect = given.trim().length>0 && normalize(given) === normalize(correctItem);
+    if(isCorrect) correct++;
+    resultsHtml += '<div class="test-result-row '+(isCorrect?'correct':'incorrect')+'">' +
+      escapeHtml(palaceRoomNames[roomIdx]) + ': "' + escapeHtml(given || '—') + '" — ' +
+      (isCorrect ? '✓ correcto' : ('✗ era "' + escapeHtml(correctItem) + '"')) +
+    '</div>';
+  });
+  var resultsEl = document.getElementById('palace-test-results');
+  if(resultsEl){
+    resultsEl.innerHTML = '<div class="score-banner">Resultado: ' + correct + ' / ' + total + '</div>' + resultsHtml;
+  }
+}
+
+/* ---------- Sistema Mayor ---------- */
+var MAJOR_CODE = [
+  {d:'0', sounds:'S, Z', mnemonic:'"Cero" empieza justo con ese sonido S.'},
+  {d:'1', sounds:'T, D', mnemonic:'La T y la D se escriben con un solo trazo hacia abajo, como el 1.'},
+  {d:'2', sounds:'N', mnemonic:'La N tiene dos patas apoyadas en el renglón.'},
+  {d:'3', sounds:'M', mnemonic:'La M tiene tres patas.'},
+  {d:'4', sounds:'R', mnemonic:'"Cuatro" termina justo en el sonido R.'},
+  {d:'5', sounds:'L', mnemonic:'En números romanos, L vale 50.'},
+  {d:'6', sounds:'CH, J, LL', mnemonic:'Una J escrita a mano se parece a un 6 al revés.'},
+  {d:'7', sounds:'K, G fuerte, Q', mnemonic:'Si juntas dos 7, forman el trazo de una K.'},
+  {d:'8', sounds:'F, V', mnemonic:'Una f cursiva minúscula tiene la forma de un 8.'},
+  {d:'9', sounds:'P, B', mnemonic:'Una P vista en espejo se parece a un 9.'}
+];
+var MAJOR_WORDS = [
+  {code:'01', word:'SETA'}, {code:'10', word:'TAZA'}, {code:'22', word:'NENE'},
+  {code:'31', word:'MOTO'}, {code:'34', word:'AMOR'}, {code:'43', word:'RAMA'},
+  {code:'42', word:'REINA'}, {code:'90', word:'PESO'}, {code:'09', word:'SOPA'},
+  {code:'95', word:'PILA'}, {code:'59', word:'LOBO'}, {code:'96', word:'PECHO'},
+  {code:'60', word:'OJOS'}, {code:'71', word:'GATO'}, {code:'17', word:'TOGA'},
+  {code:'25', word:'NULO'}, {code:'52', word:'LUNA'}, {code:'20', word:'NUEZ'},
+  {code:'02', word:'SENO'}, {code:'46', word:'RACHA'}, {code:'04', word:'CERO'},
+  {code:'84', word:'FERIA'}, {code:'48', word:'RIFA'}
+];
+function renderMajorCode(){
+  var container = document.getElementById('major-code-grid');
+  if(!container) return;
+  container.innerHTML = MAJOR_CODE.map(function(c){
+    return '<details class="code-card"><summary><span class="code-digit">'+c.d+'</span><span class="code-sounds">'+escapeHtml(c.sounds)+'</span></summary>' +
+      '<p class="code-mnemonic">'+escapeHtml(c.mnemonic)+'</p></details>';
+  }).join('');
+}
+function renderMajorWordsReference(){
+  var el = document.getElementById('major-words-reference');
+  if(!el) return;
+  el.innerHTML = MAJOR_WORDS.map(function(w){
+    return '<span class="item-chip static">'+w.code+' = '+escapeHtml(w.word)+'</span>';
+  }).join('');
+}
+var majorQuiz = { questions: [], current: 0, score: 0, locked:false };
+function setMajorQuizState(state){
+  var intro = document.getElementById('major-quiz-intro');
+  var play = document.getElementById('major-quiz-play');
+  var end = document.getElementById('major-quiz-end');
+  if(intro) intro.classList.toggle('active', state==='intro');
+  if(play) play.classList.toggle('active', state==='play');
+  if(end) end.classList.toggle('active', state==='end');
+}
+function resetMajorQuizView(){ setMajorQuizState('intro'); }
+function startMajorQuiz(){
+  var pool = shuffleArray(MAJOR_WORDS).slice(0, 10);
+  majorQuiz.questions = pool.map(function(item){
+    var direction = Math.random() < 0.5 ? 'toWord' : 'toCode';
+    var distractors = shuffleArray(MAJOR_WORDS.filter(function(w){return w.code !== item.code;})).slice(0,3);
+    var options = shuffleArray([item].concat(distractors));
+    return {item:item, direction:direction, options:options};
+  });
+  majorQuiz.current = 0;
+  majorQuiz.score = 0;
+  majorQuiz.locked = false;
+  setMajorQuizState('play');
+  renderMajorQuestion();
+}
+function renderMajorQuestion(){
+  var q = majorQuiz.questions[majorQuiz.current];
+  var promptText;
+  if(q.direction === 'toWord'){
+    promptText = 'El número <strong>'+q.item.code+'</strong> corresponde a…';
+  } else {
+    promptText = 'La palabra <strong>'+escapeHtml(q.item.word)+'</strong> corresponde a…';
+  }
+  var progressEl = document.getElementById('major-quiz-progress');
+  var promptEl = document.getElementById('major-quiz-prompt');
+  var optionsEl = document.getElementById('major-quiz-options');
+  var feedbackEl = document.getElementById('major-quiz-feedback');
+  if(progressEl) progressEl.textContent = 'Pregunta ' + (majorQuiz.current+1) + ' de ' + majorQuiz.questions.length + ' · Puntaje: ' + majorQuiz.score;
+  if(promptEl) promptEl.innerHTML = promptText;
+  if(optionsEl){
+    optionsEl.innerHTML = q.options.map(function(opt){
+      var label = q.direction === 'toWord' ? opt.word : opt.code;
+      return '<button type="button" class="option-btn" data-code="'+opt.code+'" onclick="answerMajorQuiz(this)">'+escapeHtml(label)+'</button>';
+    }).join('');
+  }
+  if(feedbackEl){ feedbackEl.textContent=''; feedbackEl.className='quiz-feedback'; }
+  majorQuiz.locked = false;
+}
+function answerMajorQuiz(btn){
+  if(majorQuiz.locked) return;
+  majorQuiz.locked = true;
+  var chosenCode = btn.dataset.code;
+  var q = majorQuiz.questions[majorQuiz.current];
+  var correctCode = q.item.code;
+  var buttons = document.querySelectorAll('#major-quiz-options .option-btn');
+  buttons.forEach(function(b){
+    if(b.dataset.code === correctCode) b.classList.add('correct');
+    if(b === btn && chosenCode !== correctCode) b.classList.add('incorrect');
+    b.disabled = true;
+  });
+  var isCorrect = chosenCode === correctCode;
+  var feedbackEl = document.getElementById('major-quiz-feedback');
+  if(isCorrect){
+    majorQuiz.score++;
+    if(feedbackEl){ feedbackEl.textContent = '¡Correcto!'; feedbackEl.className = 'quiz-feedback correct-text'; }
+  } else {
+    if(feedbackEl){ feedbackEl.textContent = 'Era ' + correctCode + ' = ' + q.item.word; feedbackEl.className = 'quiz-feedback incorrect-text'; }
+  }
+  setTimeout(function(){
+    majorQuiz.current++;
+    if(majorQuiz.current < majorQuiz.questions.length){ renderMajorQuestion(); }
+    else { endMajorQuiz(); }
+  }, 1300);
+}
+function endMajorQuiz(){
+  setMajorQuizState('end');
+  var finalScoreEl = document.getElementById('major-quiz-final-score');
+  if(finalScoreEl) finalScoreEl.textContent = majorQuiz.score + ' / ' + majorQuiz.questions.length;
+  saveMajorBestScore(majorQuiz.score, majorQuiz.questions.length);
+}
+async function saveMajorBestScore(score, total){
+  try{
+    var pct = score/total;
+    var existing = null;
+    try{
+      var res = await window.storage.get('major-best-score', false);
+      existing = (res && res.value) ? JSON.parse(res.value) : null;
+    } catch(e){ existing = null; }
+    if(!existing || pct > existing.pct){
+      await window.storage.set('major-best-score', JSON.stringify({score:score, total:total, pct:pct}), false);
+    }
+  } catch(e){ /* no-op */ }
+  renderMajorBestScore();
+}
+async function renderMajorBestScore(){
+  var el = document.getElementById('major-best-score');
+  if(!el) return;
+  try{
+    var res = await window.storage.get('major-best-score', false);
+    if(res && res.value){
+      var data = JSON.parse(res.value);
+      el.textContent = 'Tu mejor puntaje: ' + data.score + ' / ' + data.total;
+    } else {
+      el.textContent = 'Aún no tienes un puntaje guardado — juega tu primer quiz.';
+    }
+  } catch(e){
+    el.textContent = 'Aún no tienes un puntaje guardado — juega tu primer quiz.';
+  }
+}
+
+/* ---------- Memorama ---------- */
+var MEMORAMA_PAIRS = [
+  {id:1, term:'Palacio de la Memoria', def:'Imágenes en lugares fijos de un recorrido'},
+  {id:2, term:'Sistema Mayor', def:'Convierte números en sonidos y palabras'},
+  {id:3, term:'Sistema PAO', def:'Persona + Acción + Objeto en una escena'},
+  {id:4, term:'Chunking', def:'Agrupa datos sueltos en bloques con sentido'},
+  {id:5, term:'Repetición espaciada', def:'Repasas justo antes de olvidar'},
+  {id:6, term:'Recuperación activa', def:'Recuerdas sin ver la respuesta'},
+  {id:7, term:'Codificación dual', def:'Une imagen y palabra para recordar mejor'},
+  {id:8, term:'Sistema de Pegs', def:'Perchas fijas donde cuelgas info nueva'}
+];
+var memState = { cards:[], flipped:[], matched:[], moves:0, locked:false, startTime:null, timerInterval:null };
+function initMemorama(){
+  var cards = [];
+  MEMORAMA_PAIRS.forEach(function(p){
+    cards.push({pairId:p.id, type:'term', text:p.term});
+    cards.push({pairId:p.id, type:'def', text:p.def});
+  });
+  memState.cards = shuffleArray(cards);
+  memState.flipped = [];
+  memState.matched = [];
+  memState.moves = 0;
+  memState.locked = false;
+  memState.startTime = null;
+  if(memState.timerInterval) clearInterval(memState.timerInterval);
+  memState.timerInterval = null;
+  var statusEl = document.getElementById('mem-status');
+  var movesEl = document.getElementById('mem-moves');
+  var timerEl = document.getElementById('mem-timer');
+  if(statusEl) statusEl.textContent = '';
+  if(movesEl) movesEl.textContent = 'Movimientos: 0';
+  if(timerEl) timerEl.textContent = 'Tiempo: 0s';
+  renderMemGrid();
+}
+function renderMemGrid(){
+  var container = document.getElementById('mem-grid');
+  if(!container) return;
+  container.innerHTML = memState.cards.map(function(card, idx){
+    var isFlipped = memState.flipped.indexOf(idx) !== -1;
+    var isMatched = memState.matched.indexOf(card.pairId) !== -1;
+    var cls = 'mem-card' + ((isFlipped||isMatched) ? ' flipped' : '') + (isMatched ? ' matched' : '');
+    var content = (isFlipped || isMatched) ? escapeHtml(card.text) : '?';
+    return '<button type="button" class="'+cls+'" onclick="flipMemCard('+idx+')"'+((isFlipped||isMatched)?' disabled':'')+'>'+content+'</button>';
+  }).join('');
+}
+function flipMemCard(idx){
+  if(memState.locked) return;
+  if(memState.flipped.indexOf(idx) !== -1) return;
+  var card = memState.cards[idx];
+  if(memState.matched.indexOf(card.pairId) !== -1) return;
+  if(memState.flipped.length >= 2) return;
+  if(!memState.startTime){
+    memState.startTime = Date.now();
+    memState.timerInterval = setInterval(updateMemTimer, 1000);
+  }
+  memState.flipped.push(idx);
+  renderMemGrid();
+  if(memState.flipped.length === 2){
+    memState.moves++;
+    var movesEl = document.getElementById('mem-moves');
+    if(movesEl) movesEl.textContent = 'Movimientos: ' + memState.moves;
+    var i1 = memState.flipped[0], i2 = memState.flipped[1];
+    var c1 = memState.cards[i1], c2 = memState.cards[i2];
+    if(c1.pairId === c2.pairId && c1.type !== c2.type){
+      memState.matched.push(c1.pairId);
+      memState.flipped = [];
+      renderMemGrid();
+      if(memState.matched.length === MEMORAMA_PAIRS.length){ finishMemorama(); }
+    } else {
+      memState.locked = true;
+      setTimeout(function(){
+        memState.flipped = [];
+        memState.locked = false;
+        renderMemGrid();
+      }, 900);
+    }
+  }
+}
+function updateMemTimer(){
+  if(!memState.startTime) return;
+  var seconds = Math.floor((Date.now()-memState.startTime)/1000);
+  var timerEl = document.getElementById('mem-timer');
+  if(timerEl) timerEl.textContent = 'Tiempo: ' + seconds + 's';
+}
+function finishMemorama(){
+  if(memState.timerInterval) clearInterval(memState.timerInterval);
+  var seconds = Math.floor((Date.now()-memState.startTime)/1000);
+  var statusEl = document.getElementById('mem-status');
+  if(statusEl) statusEl.textContent = '¡Completado! ' + memState.moves + ' movimientos en ' + seconds + 's.';
+}
+
+/* ---------- Recall rápido ---------- */
+var RECALL_EASY = ['campana','tigre','paraguas','volcán','tambor','cereza','cometa','ancla','búho','linterna'];
+var RECALL_MEDIUM = RECALL_EASY.concat(['brújula','cascada','tornillo','medusa','saxofón']);
+var RECALL_HARD = RECALL_MEDIUM.concat(['telaraña','pergamino','catapulta','iceberg','xilófono']);
+var recallState = { list:[], timeLeft:0, timerInterval:null };
+function setRecallState(state){
+  ['recall-setup','recall-study','recall-input-phase','recall-results'].forEach(function(id){
+    var el = document.getElementById(id);
+    if(el) el.classList.toggle('active', id === state);
+  });
+}
+function startRecall(level){
+  var list;
+  if(level === 'easy') list = RECALL_EASY;
+  else if(level === 'medium') list = RECALL_MEDIUM;
+  else if(level === 'hard') list = RECALL_HARD;
+  else list = getCustomRecallList();
+  if(!list || list.length === 0){
+    alert('Escribe al menos una palabra en tu lista personalizada.');
+    return;
+  }
+  beginRecallStudyPhase(list);
+}
+function getCustomRecallList(){
+  var input = document.getElementById('recall-custom-input');
+  if(!input) return [];
+  return input.value.split(/[\n,]/).map(function(s){return s.trim();}).filter(function(s){return s.length>0;}).slice(0,40);
+}
+function beginRecallStudyPhase(list){
+  recallState.list = list;
+  var duration = Math.min(Math.max(list.length * 3, 15), 120);
+  recallState.timeLeft = duration;
+  setRecallState('recall-study');
+  var listEl = document.getElementById('recall-study-list');
+  if(listEl){
+    listEl.innerHTML = list.map(function(w){ return '<span class="word-chip">'+escapeHtml(w)+'</span>'; }).join('');
+  }
+  updateRecallTimerDisplay();
+  if(recallState.timerInterval) clearInterval(recallState.timerInterval);
+  recallState.timerInterval = setInterval(function(){
+    recallState.timeLeft--;
+    updateRecallTimerDisplay();
+    if(recallState.timeLeft <= 0){
+      clearInterval(recallState.timerInterval);
+      goToRecallInputPhase();
+    }
+  }, 1000);
+}
+function updateRecallTimerDisplay(){
+  var el = document.getElementById('recall-timer');
+  if(el) el.textContent = recallState.timeLeft + 's';
+}
+function skipToRecallInput(){
+  if(recallState.timerInterval) clearInterval(recallState.timerInterval);
+  goToRecallInputPhase();
+}
+function goToRecallInputPhase(){
+  setRecallState('recall-input-phase');
+  var answerEl = document.getElementById('recall-answer');
+  if(answerEl){ answerEl.value=''; answerEl.focus(); }
+}
+function submitRecall(){
+  var answerEl = document.getElementById('recall-answer');
+  var raw = answerEl ? answerEl.value : '';
+  var given = raw.split(/[\n,]/).map(function(s){return s.trim();}).filter(function(s){return s.length>0;});
+  var normGiven = given.map(normalize);
+  var results = recallState.list.map(function(word){
+    var found = normGiven.indexOf(normalize(word)) !== -1;
+    return {word:word, found:found};
+  });
+  var correctCount = results.filter(function(r){return r.found;}).length;
+  setRecallState('recall-results');
+  var scoreEl = document.getElementById('recall-score');
+  if(scoreEl) scoreEl.textContent = correctCount + ' / ' + recallState.list.length;
+  var resultsListEl = document.getElementById('recall-results-list');
+  if(resultsListEl){
+    resultsListEl.innerHTML = results.map(function(r){
+      return '<span class="word-chip '+(r.found?'correct':'incorrect')+'">'+escapeHtml(r.word)+(r.found?' ✓':' ✗')+'</span>';
+    }).join('');
+  }
+  saveRecallHistory(correctCount, recallState.list.length);
+}
+function resetRecallToSetup(){ setRecallState('recall-setup'); }
+async function saveRecallHistory(correct, total){
+  try{
+    var existing = [];
+    try{
+      var res = await window.storage.get('recall-history', false);
+      existing = (res && res.value) ? JSON.parse(res.value) : [];
+    } catch(e){ existing = []; }
+    existing.unshift({date: new Date().toISOString(), correct: correct, total: total});
+    existing = existing.slice(0, 15);
+    await window.storage.set('recall-history', JSON.stringify(existing), false);
+  } catch(e){ /* no-op */ }
+}
+async function renderRecallHistory(){
+  var el = document.getElementById('recall-history-list');
+  if(!el) return;
+  el.innerHTML = '<p class="hint">Cargando historial…</p>';
+  try{
+    var res = await window.storage.get('recall-history', false);
+    var history = (res && res.value) ? JSON.parse(res.value) : [];
+    if(history.length === 0){
+      el.innerHTML = '<p class="hint">Todavía no tienes sesiones guardadas. Completa un ejercicio para empezar tu historial.</p>';
+      return;
+    }
+    el.innerHTML = history.map(function(h){
+      var d = new Date(h.date);
+      var dateStr = d.toLocaleDateString('es-MX', {day:'numeric', month:'short', year:'numeric'});
+      var pct = Math.round((h.correct/h.total)*100);
+      return '<div class="history-row"><span>'+dateStr+'</span><span>'+h.correct+'/'+h.total+' ('+pct+'%)</span></div>';
+    }).join('');
+  } catch(e){
+    el.innerHTML = '<p class="hint">Todavía no tienes sesiones guardadas. Completa un ejercicio para empezar tu historial.</p>';
+  }
+}
+
+/* ---------- Plan de estudio ---------- */
+var STUDY_PLAN = [
+  {week:1, title:'Semana 1-2 · Fundamentos', points:['Aprende el método de Loci con un palacio de 10 lugares','Practica el método de enlace/historia','15-20 min diarios: memoriza listas de 10 y luego 20 ítems','Empieza a usar repetición espaciada desde el día 1 con tu material real']},
+  {week:2, title:'Semana 3-4 · Números', points:['Aprende el código del Sistema Mayor (los 10 sonidos)','Construye ~20 palabras-percha nuevas por semana','Practica la conversión dígito↔palabra cronometrada','Memoriza números de 8-12 dígitos combinando pegs + palacio']},
+  {week:3, title:'Semana 5-6 · PAO y cartas', points:['Crea imágenes Persona-Acción-Objeto para 00-99','Aplica el sistema a cartas: empieza con 9, luego medio mazo, luego el mazo completo','Introduce práctica distribuida (revisa palacios anteriores)']},
+  {week:4, title:'Semana 7-8 · Aplicación real', points:['Practica asociación nombre-cara','Aplica palacios a material real de tus materias (fórmulas, definiciones, algoritmos)','Combina con repetición espaciada para retención a largo plazo']}
+];
+async function renderPlanWeeks(){
+  var container = document.getElementById('plan-weeks');
+  if(!container) return;
+  container.innerHTML = STUDY_PLAN.map(function(w){
+    return '<div class="plan-week">' +
+      '<div class="plan-week-header">' +
+        '<h4>'+escapeHtml(w.title)+'</h4>' +
+        '<label class="week-check-label"><input type="checkbox" data-week="'+w.week+'" onchange="togglePlanWeek('+w.week+', this.checked)"> Completada</label>' +
+      '</div>' +
+      '<ul>'+ w.points.map(function(p){ return '<li>'+escapeHtml(p)+'</li>'; }).join('') +'</ul>' +
+    '</div>';
+  }).join('');
+  try{
+    var res = await window.storage.get('plan-progress', false);
+    var progress = (res && res.value) ? JSON.parse(res.value) : {};
+    STUDY_PLAN.forEach(function(w){
+      if(progress[w.week]){
+        var cb = container.querySelector('input[data-week="'+w.week+'"]');
+        if(cb) cb.checked = true;
+      }
+    });
+  } catch(e){ /* sin progreso guardado aún */ }
+}
+async function togglePlanWeek(week, checked){
+  try{
+    var res = await window.storage.get('plan-progress', false);
+    var progress = (res && res.value) ? JSON.parse(res.value) : {};
+    progress[week] = checked;
+    await window.storage.set('plan-progress', JSON.stringify(progress), false);
+  } catch(e){ /* no-op */ }
+}
+
+document.addEventListener('DOMContentLoaded', function(){
+  renderPalace();
+  renderMajorCode();
+  renderMajorWordsReference();
+  renderMajorBestScore();
+  initMemorama();
+  renderRecallHistory();
+  renderPlanWeeks();
+});
+
+if('serviceWorker' in navigator){
+  window.addEventListener('load', function(){
+    navigator.serviceWorker.register('./sw.js').catch(function(){ /* no-op */ });
+  });
+}
+</script>
+</body>
+</html>
