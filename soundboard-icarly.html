@@ -1,0 +1,296 @@
+<!doctype html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Soundboard iCarly & memes</title>
+<style>
+  :root{
+    --bg:#FAF5EA;
+    --surface:#F1E8D8;
+    --surface-2:#E9DEC9;
+    --ink:#2A241C;
+    --ink-dim:#6B6152;
+    --accent:#1F7A8C;
+    --accent-ink:#FFFFFF;
+    --border:rgba(42,36,28,0.14);
+    --ring:rgba(31,122,140,0.55);
+
+    --cat-icarly:#C9551D;
+    --cat-nick:#6E4FC9;
+    --cat-meme:#2E8B57;
+  }
+  :root:not([data-theme="light"]){
+    @media (prefers-color-scheme: dark){
+      --bg:#121110;
+      --surface:#1C1A18;
+      --surface-2:#262320;
+      --ink:#F2EDE6;
+      --ink-dim:#ABA398;
+      --accent:#3BDEF7;
+      --accent-ink:#08202A;
+      --border:rgba(242,237,230,0.14);
+      --ring:rgba(59,222,247,0.55);
+    }
+  }
+  :root[data-theme="dark"]{
+    --bg:#121110;
+    --surface:#1C1A18;
+    --surface-2:#262320;
+    --ink:#F2EDE6;
+    --ink-dim:#ABA398;
+    --accent:#3BDEF7;
+    --accent-ink:#08202A;
+    --border:rgba(242,237,230,0.14);
+    --ring:rgba(59,222,247,0.55);
+  }
+
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    min-height:100vh;
+    padding-bottom:32px;
+    transition:background .2s ease, color .2s ease;
+  }
+  header{
+    position:sticky;
+    top:0;
+    z-index:10;
+    background:var(--bg);
+    border-bottom:1px solid var(--border);
+    padding:14px 16px;
+    display:flex;
+    align-items:center;
+    gap:12px;
+  }
+  header h1{
+    font-size:19px;
+    margin:0;
+    flex:1;
+    line-height:1.25;
+  }
+  header p{
+    margin:2px 0 0;
+    font-size:13px;
+    color:var(--ink-dim);
+  }
+  .icon-btn{
+    width:44px;
+    height:44px;
+    min-width:44px;
+    border-radius:12px;
+    border:1px solid var(--border);
+    background:var(--surface);
+    color:var(--ink);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    cursor:pointer;
+  }
+  .icon-btn svg{width:20px;height:20px;}
+  .stop-btn{
+    width:auto;
+    padding:0 14px;
+    gap:8px;
+    font-size:14px;
+    font-weight:600;
+  }
+
+  main{
+    max-width:720px;
+    margin:0 auto;
+    padding:16px;
+  }
+  .category{
+    margin-bottom:28px;
+  }
+  .category h2{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-size:15px;
+    text-transform:uppercase;
+    letter-spacing:.04em;
+    color:var(--ink-dim);
+    margin:0 0 12px;
+  }
+  .dot{
+    width:10px;
+    height:10px;
+    border-radius:50%;
+    flex-shrink:0;
+  }
+  .cat-icarly .dot{background:var(--cat-icarly);}
+  .cat-nick .dot{background:var(--cat-nick);}
+  .cat-meme .dot{background:var(--cat-meme);}
+  .cat-icarly h2{border-left:3px solid var(--cat-icarly);padding-left:10px;}
+  .cat-nick h2{border-left:3px solid var(--cat-nick);padding-left:10px;}
+  .cat-meme h2{border-left:3px solid var(--cat-meme);padding-left:10px;}
+
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill,minmax(148px,1fr));
+    gap:10px;
+  }
+  .sound-btn{
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    justify-content:center;
+    gap:8px;
+    min-height:76px;
+    padding:12px 8px;
+    background:var(--surface);
+    border:1px solid var(--border);
+    border-radius:14px;
+    color:var(--ink);
+    font-size:14px;
+    font-weight:500;
+    text-align:center;
+    cursor:pointer;
+    transition:transform .08s ease, box-shadow .15s ease, background .15s ease;
+  }
+  .sound-btn:active{
+    transform:scale(0.96);
+    background:var(--surface-2);
+  }
+  .sound-btn.playing{
+    box-shadow:0 0 0 3px var(--ring);
+    background:var(--surface-2);
+  }
+  .sound-btn svg{
+    width:22px;
+    height:22px;
+    color:var(--accent);
+    flex-shrink:0;
+  }
+
+  footer{
+    max-width:720px;
+    margin:24px auto 0;
+    padding:0 16px;
+    font-size:12px;
+    color:var(--ink-dim);
+    line-height:1.5;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <button class="icon-btn stop-btn" id="stopAll" aria-label="Detener todos los sonidos">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="6" y="6" width="12" height="12" rx="2"></rect></svg>
+    <span>Detener</span>
+  </button>
+  <div>
+    <h1>Soundboard iCarly & memes</h1>
+    <p>Toca un botón para reproducir</p>
+  </div>
+  <button class="icon-btn" id="themeToggle" aria-label="Cambiar tema">
+    <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
+    <svg id="iconMoon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:none"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path></svg>
+  </button>
+</header>
+
+<main>
+
+  <section class="category cat-icarly">
+    <h2><span class="dot"></span>iCarly</h2>
+    <div class="grid">
+      <button class="sound-btn" data-src="/media/sounds/icarly-cheers.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Aplausos</button>
+      <button class="sound-btn" data-src="/media/sounds/crowd-disappointment-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Decepción "ohh"</button>
+      <button class="sound-btn" data-src="/media/sounds/audience-laugh-tracks.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Risa de audiencia</button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-transition.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Transición</button>
+      <button class="sound-btn" data-src="/media/sounds/lewbert-sceam-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Grito de Lewbert</button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-ahh-ringtone.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Ringtone "ahh"</button>
+      <button class="sound-btn" data-src="/media/sounds/gibby-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Gibby</button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-random-dancing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Baile random</button>
+    </div>
+  </section>
+
+  <section class="category cat-nick">
+    <h2><span class="dot"></span>Otros shows Nickelodeon</h2>
+    <div class="grid">
+      <button class="sound-btn" data-src="/media/sounds/you-mucker-drake-and-josh-sound-effect-128-kbps.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Drake & Josh: "You mucker"</button>
+      <button class="sound-btn" data-src="/media/sounds/drake-and-josh-boohs-not-for-me.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Drake & Josh: "Boohs"</button>
+      <button class="sound-btn" data-src="/media/sounds/victorious-transition-music.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Victorious: transición</button>
+      <button class="sound-btn" data-src="/media/sounds/spongebob-laughing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bob Esponja: risa</button>
+      <button class="sound-btn" data-src="/media/sounds/spongebob-patrick-laughing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bob y Patricio riendo</button>
+    </div>
+  </section>
+
+  <section class="category cat-meme">
+    <h2><span class="dot"></span>Memes populares</h2>
+    <div class="grid">
+      <button class="sound-btn" data-src="/media/sounds/bruh.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>BRUH</button>
+      <button class="sound-btn" data-src="/media/sounds/vine-boom.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Vine Boom</button>
+      <button class="sound-btn" data-src="/media/sounds/erro.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Error Windows XP</button>
+      <button class="sound-btn" data-src="/media/sounds/emotional-damage-meme.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Daño emocional</button>
+      <button class="sound-btn" data-src="/media/sounds/metal-pipe-falling-sound-effect.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Tubo de metal</button>
+      <button class="sound-btn" data-src="/media/sounds/airhorn.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bocina MLG</button>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Sonidos servidos desde myinstants.com — necesitas conexión a internet para reproducirlos.
+</footer>
+
+<script>
+  // Tema: arranca según el sistema, luego respeta lo que el usuario elija
+  const root = document.documentElement;
+  const saved = localStorage.getItem('soundboard-theme');
+  if (saved) root.setAttribute('data-theme', saved);
+
+  function currentTheme(){
+    const attr = root.getAttribute('data-theme');
+    if (attr) return attr;
+    return window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
+  }
+  function syncIcons(){
+    const dark = currentTheme() === 'dark';
+    document.getElementById('iconSun').style.display = dark ? 'block' : 'none';
+    document.getElementById('iconMoon').style.display = dark ? 'none' : 'block';
+  }
+  syncIcons();
+
+  document.getElementById('themeToggle').addEventListener('click', () => {
+    const next = currentTheme() === 'dark' ? 'light' : 'dark';
+    root.setAttribute('data-theme', next);
+    localStorage.setItem('soundboard-theme', next);
+    syncIcons();
+  });
+
+  // Reproducción de sonidos
+  const BASE = 'https://www.myinstants.com';
+  let activeAudios = [];
+
+  document.querySelectorAll('.sound-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      const audio = new Audio(BASE + btn.dataset.src);
+      activeAudios.push({audio, btn});
+      btn.classList.add('playing');
+      audio.play().catch(() => {
+        btn.classList.remove('playing');
+        alert('No se pudo reproducir. Revisa tu conexión a internet.');
+      });
+      audio.addEventListener('ended', () => btn.classList.remove('playing'));
+    });
+  });
+
+  document.getElementById('stopAll').addEventListener('click', () => {
+    activeAudios.forEach(({audio, btn}) => {
+      audio.pause();
+      audio.currentTime = 0;
+      btn.classList.remove('playing');
+    });
+    activeAudios = [];
+  });
+</script>
+
+</body>
+</html>
