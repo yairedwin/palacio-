@@ -140,8 +140,8 @@
     flex-direction:column;
     align-items:center;
     justify-content:center;
-    gap:8px;
-    min-height:76px;
+    gap:6px;
+    min-height:88px;
     padding:12px 8px;
     background:var(--surface);
     border:1px solid var(--border);
@@ -161,11 +161,34 @@
     box-shadow:0 0 0 3px var(--ring);
     background:var(--surface-2);
   }
-  .sound-btn svg{
+  .sound-btn .icon{
     width:22px;
     height:22px;
     color:var(--accent);
     flex-shrink:0;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+  }
+  .sound-btn .icon svg{width:100%;height:100%;}
+  .sound-btn .label{line-height:1.2;}
+  .sound-btn .time{
+    font-size:11px;
+    color:var(--ink-dim);
+    font-variant-numeric:tabular-nums;
+  }
+  .sound-btn .bar{
+    width:100%;
+    height:3px;
+    border-radius:2px;
+    background:var(--border);
+    overflow:hidden;
+  }
+  .sound-btn .bar-fill{
+    height:100%;
+    width:0%;
+    background:var(--accent);
+    transition:width .1s linear;
   }
 
   footer{
@@ -187,7 +210,7 @@
   </button>
   <div>
     <h1>Soundboard iCarly & memes</h1>
-    <p>Toca un botón para reproducir</p>
+    <p>Toca para reproducir, toca de nuevo para pausar</p>
   </div>
   <button class="icon-btn" id="themeToggle" aria-label="Cambiar tema">
     <svg id="iconSun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="4"></circle><path d="M12 2v2M12 20v2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"></path></svg>
@@ -200,37 +223,120 @@
   <section class="category cat-icarly">
     <h2><span class="dot"></span>iCarly</h2>
     <div class="grid">
-      <button class="sound-btn" data-src="/media/sounds/icarly-cheers.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Aplausos</button>
-      <button class="sound-btn" data-src="/media/sounds/crowd-disappointment-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Decepción "ohh"</button>
-      <button class="sound-btn" data-src="/media/sounds/audience-laugh-tracks.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Risa de audiencia</button>
-      <button class="sound-btn" data-src="/media/sounds/icarly-transition.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Transición</button>
-      <button class="sound-btn" data-src="/media/sounds/lewbert-sceam-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Grito de Lewbert</button>
-      <button class="sound-btn" data-src="/media/sounds/icarly-ahh-ringtone.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Ringtone "ahh"</button>
-      <button class="sound-btn" data-src="/media/sounds/gibby-icarly.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Gibby</button>
-      <button class="sound-btn" data-src="/media/sounds/icarly-random-dancing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Baile random</button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-cheers.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Aplausos</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/crowd-disappointment-icarly.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Decepción "ohh"</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/audience-laugh-tracks.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Risa de audiencia</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-transition.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Transición</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-ahh-ringtone.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Tono "ahh"</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/icarly-random-dancing.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Baile improvisado</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
     </div>
   </section>
 
   <section class="category cat-nick">
     <h2><span class="dot"></span>Otros shows Nickelodeon</h2>
     <div class="grid">
-      <button class="sound-btn" data-src="/media/sounds/you-mucker-drake-and-josh-sound-effect-128-kbps.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Drake & Josh: "You mucker"</button>
-      <button class="sound-btn" data-src="/media/sounds/drake-and-josh-boohs-not-for-me.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Drake & Josh: "Boohs"</button>
-      <button class="sound-btn" data-src="/media/sounds/victorious-transition-music.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Victorious: transición</button>
-      <button class="sound-btn" data-src="/media/sounds/spongebob-laughing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bob Esponja: risa</button>
-      <button class="sound-btn" data-src="/media/sounds/spongebob-patrick-laughing.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bob y Patricio riendo</button>
+      <button class="sound-btn" data-src="/media/sounds/you-mucker-drake-and-josh-sound-effect-128-kbps.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Drake & Josh: insulto</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/drake-and-josh-boohs-not-for-me.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Drake & Josh: abucheo</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/victorious-transition-music.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Victorious: transición</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/spongebob-laughing.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Bob Esponja: risa</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/spongebob-patrick-laughing.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Bob y Patricio riendo</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
     </div>
   </section>
 
   <section class="category cat-meme">
     <h2><span class="dot"></span>Memes populares</h2>
     <div class="grid">
-      <button class="sound-btn" data-src="/media/sounds/bruh.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>BRUH</button>
-      <button class="sound-btn" data-src="/media/sounds/vine-boom.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Vine Boom</button>
-      <button class="sound-btn" data-src="/media/sounds/erro.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Error Windows XP</button>
-      <button class="sound-btn" data-src="/media/sounds/emotional-damage-meme.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Daño emocional</button>
-      <button class="sound-btn" data-src="/media/sounds/metal-pipe-falling-sound-effect.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Tubo de metal</button>
-      <button class="sound-btn" data-src="/media/sounds/airhorn.mp3"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 5 6 9H2v6h4l5 4V5z"></path><path d="M15.5 8.5a5 5 0 0 1 0 7"></path></svg>Bocina MLG</button>
+      <button class="sound-btn" data-src="/media/sounds/bruh.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">BRUH</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/vine-boom.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Vine Boom</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/erro.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Error Windows XP</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/emotional-damage-meme.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Daño emocional</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/metal-pipe-falling-sound-effect.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Tubo de metal</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
+      <button class="sound-btn" data-src="/media/sounds/airhorn.mp3">
+        <span class="icon"><svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg></span>
+        <span class="label">Bocina MLG</span>
+        <span class="time">0:00 / 0:00</span>
+        <span class="bar"><span class="bar-fill"></span></span>
+      </button>
     </div>
   </section>
 
@@ -265,30 +371,75 @@
     syncIcons();
   });
 
-  // Reproducción de sonidos
+  // Reproducción de sonidos, con pausa/reanudación y tiempo transcurrido
   const BASE = 'https://www.myinstants.com';
-  let activeAudios = [];
+  const PLAY_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><path d="M8 5v14l11-7z"></path></svg>';
+  const PAUSE_ICON = '<svg viewBox="0 0 24 24" fill="currentColor"><rect x="6" y="5" width="4" height="14" rx="1"></rect><rect x="14" y="5" width="4" height="14" rx="1"></rect></svg>';
+
+  function fmtTime(t){
+    if (!isFinite(t) || t < 0) return '0:00';
+    const m = Math.floor(t / 60);
+    const s = Math.floor(t % 60).toString().padStart(2, '0');
+    return `${m}:${s}`;
+  }
+
+  const activeSounds = [];
 
   document.querySelectorAll('.sound-btn').forEach(btn => {
+    const iconEl = btn.querySelector('.icon');
+    const timeEl = btn.querySelector('.time');
+    const fillEl = btn.querySelector('.bar-fill');
+    let audio = null;
+
+    function setPlaying(isPlaying){
+      btn.classList.toggle('playing', isPlaying);
+      iconEl.innerHTML = isPlaying ? PAUSE_ICON : PLAY_ICON;
+    }
+
+    function updateTime(){
+      const dur = audio && isFinite(audio.duration) ? audio.duration : 0;
+      const cur = audio ? audio.currentTime : 0;
+      timeEl.textContent = `${fmtTime(cur)} / ${fmtTime(dur)}`;
+      fillEl.style.width = dur ? `${Math.min(100, (cur / dur) * 100)}%` : '0%';
+    }
+
     btn.addEventListener('click', () => {
-      const audio = new Audio(BASE + btn.dataset.src);
-      activeAudios.push({audio, btn});
-      btn.classList.add('playing');
-      audio.play().catch(() => {
-        btn.classList.remove('playing');
-        alert('No se pudo reproducir. Revisa tu conexión a internet.');
-      });
-      audio.addEventListener('ended', () => btn.classList.remove('playing'));
+      if (!audio) {
+        audio = new Audio(BASE + btn.dataset.src);
+        activeSounds.push({ get audio(){ return audio; }, setPlaying, updateTime });
+        audio.addEventListener('loadedmetadata', updateTime);
+        audio.addEventListener('timeupdate', updateTime);
+        audio.addEventListener('ended', () => {
+          audio.currentTime = 0;
+          setPlaying(false);
+          updateTime();
+        });
+        setPlaying(true);
+        audio.play().catch(() => {
+          setPlaying(false);
+          alert('No se pudo reproducir. Revisa tu conexión a internet.');
+          audio = null;
+        });
+        return;
+      }
+      if (audio.paused) {
+        audio.play();
+        setPlaying(true);
+      } else {
+        audio.pause();
+        setPlaying(false);
+      }
     });
   });
 
   document.getElementById('stopAll').addEventListener('click', () => {
-    activeAudios.forEach(({audio, btn}) => {
+    activeSounds.forEach(({ audio, setPlaying, updateTime }) => {
+      if (!audio) return;
       audio.pause();
       audio.currentTime = 0;
-      btn.classList.remove('playing');
+      setPlaying(false);
+      updateTime();
     });
-    activeAudios = [];
   });
 </script>
 
